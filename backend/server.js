@@ -7,10 +7,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: "*",   // temporarily allow all origins for deployment
     methods: ["GET", "POST"]
   }
 });
+
 
 app.use(cors());
 app.use(express.json());

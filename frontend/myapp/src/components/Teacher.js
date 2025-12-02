@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import './Teacher.css';
 import ChatPopup from './ChatPopup';
 import socket from '../socket';

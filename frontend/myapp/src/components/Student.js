@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 import './Student.css';
 import ChatPopup from './ChatPopup';
 import socket from '../socket';
@@ -89,11 +89,16 @@ function Student() {
     socket.emit('student:join', name.trim());
   };
 
-  const handleSubmitAnswer = () => {
-    if (!selectedAnswer || hasAnswered) return;
+const handleSubmitAnswer = useCallback(() => {
+  if (selectedAnswer && !hasAnswered) {
     socket.emit('answer:submit', selectedAnswer);
     setHasAnswered(true);
-  };
+  }
+}, [selectedAnswer, hasAnswered]); // add any other dependencies
+
+useEffect(() => {
+  // effect that needed handleSubmitAnswer
+}, [handleSubmitAnswer, /* other deps */]);
 
   if (kicked) {
     return (
@@ -216,7 +221,7 @@ function Student() {
             const total = Object.values(results.results).reduce((a, b) => a + b, 0) || 0;
             const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
             // correctFlags might be sent as results.correctFlags or results.correctFlags array
-            const correctFlags = results.correctFlags || results.correctFlags === undefined ? results.correctFlags : null;
+            
             // In our backend we send correctFlags at top-level of results object
             const isCorrect = Array.isArray(results.correctFlags) ? !!results.correctFlags[optIndex] : false;
 
