@@ -19,6 +19,7 @@ app.use(express.json());
 let currentPoll = null;
 let students = new Map(); // socketId -> {name, answered, answer}
 let pollHistory = [];
+let chatHistory = [];
 
 io.on('connection', (socket) => {
   console.log('New connection:', socket.id);
@@ -154,6 +155,27 @@ io.on('connection', (socket) => {
     io.emit('students:update', Array.from(students.values()).map(s => s.name));
     console.log('Disconnected:', socket.id);
   });
+
+    // Send recent chat history on request and listen for new chat messages
+  socket.on('chat:history', () => {
+    // send the chat history (limit to last 200 messages)
+    const recent = chatHistory.slice(-200);
+    socket.emit('chat:history', recent);
+  });
+
+  socket.on('chat:message', (msg) => {
+    // msg: { from, text, ts } — sanitize minimally
+    if (!msg || !msg.text) return;
+    const message = {
+      from: msg.from || 'Anonymous',
+      text: String(msg.text).slice(0, 1000),
+      ts: msg.ts || new Date().toISOString()
+    };
+    chatHistory.push(message);
+    // broadcast to all connected clients
+    io.emit('chat:message', message);
+  });
+
 });
 
 const PORT = process.env.PORT || 5000;

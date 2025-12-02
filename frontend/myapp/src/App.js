@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Teacher from './components/Teacher';
 import Student from './components/Student';
+
 import './App.css';
 
 function LandingPage() {
