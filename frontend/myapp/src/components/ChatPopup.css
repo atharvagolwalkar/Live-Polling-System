@@ -275,3 +275,87 @@
   text-align: center;
   background: #FAFBFC;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chat-popup {
+    right: 12px;
+    bottom: 80px;
+    width: calc(100vw - 24px);
+    max-width: 360px;
+    height: 480px;
+  }
+
+  .chat-bubble {
+    right: 12px;
+    bottom: 12px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .chat-header {
+    padding: 14px 16px;
+  }
+
+  .chat-title {
+    font-size: 14px;
+  }
+
+  .tab-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .chat-body {
+    padding: 12px;
+  }
+
+  .message {
+    max-width: 80%;
+    padding: 8px 12px;
+  }
+
+  .msg-text {
+    font-size: 12px;
+  }
+
+  .chat-input {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  .send-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-popup {
+    width: calc(100vw - 16px);
+    right: 8px;
+    bottom: 70px;
+    height: 420px;
+  }
+
+  .chat-bubble {
+    right: 8px;
+    bottom: 8px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .chat-header {
+    padding: 12px;
+  }
+
+  .chat-tabs {
+    gap: 2px;
+    padding: 2px;
+  }
+
+  .tab-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+}

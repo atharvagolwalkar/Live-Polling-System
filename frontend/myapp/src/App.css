@@ -885,16 +885,143 @@ body {
 }
 
 @media (max-width: 768px) {
+  .landing-container {
+    padding: 20px 16px;
+  }
+
+  .intervue-badge {
+    top: 16px;
+    left: 16px;
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+
   .landing-card {
-    padding: 40px 30px;
+    padding: 40px 28px;
+    border-radius: 12px;
+  }
+
+  .landing-card h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .landing-subtitle {
+    font-size: 13px;
+    margin-bottom: 32px;
   }
   
   .role-selection {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .role-card {
+    padding: 20px 18px;
+  }
+
+  .role-card h3 {
+    font-size: 15px;
+  }
+
+  .role-card p {
+    font-size: 12px;
+  }
+
+  .continue-btn {
+    padding: 12px;
+    font-size: 14px;
   }
   
   .teacher-left,
   .student-card {
     padding: 30px 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .form-input {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .chat-bubble-btn {
+    width: 52px;
+    height: 52px;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .chat-bubble-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-container {
+    padding: 16px 12px;
+  }
+
+  .landing-card {
+    padding: 32px 20px;
+  }
+
+  .landing-card h1 {
+    font-size: 20px;
+  }
+
+  .landing-subtitle {
+    font-size: 12px;
+    margin-bottom: 24px;
+  }
+
+  .role-selection {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .role-card {
+    padding: 18px 16px;
+  }
+
+  .role-card h3 {
+    font-size: 14px;
+  }
+
+  .role-card p {
+    font-size: 11px;
+  }
+
+  .role-card.selected::after {
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .continue-btn {
+    padding: 11px;
+    font-size: 13px;
+  }
+
+  .chat-bubble-btn {
+    width: 48px;
+    height: 48px;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .chat-bubble-btn svg {
+    width: 20px;
+    height: 20px;
   }
 }

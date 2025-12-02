@@ -373,3 +373,129 @@
   border-left: 4px solid #10B981; 
   padding-left: 12px;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .student-container {
+    padding: 16px;
+  }
+
+  .intervue-badge {
+    top: 16px;
+    left: 16px;
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+
+  .student-card {
+    margin-top: 70px;
+    padding: 28px 24px;
+    border-radius: 12px;
+  }
+
+  .student-card h2 {
+    font-size: 20px;
+  }
+
+  .student-subtitle {
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .name-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .continue-btn {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .question-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .question-number,
+  .question-timer {
+    font-size: 14px;
+  }
+
+  .question-text-box {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .question-text {
+    font-size: 14px;
+  }
+
+  .answer-options {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .answer-option {
+    padding: 14px;
+  }
+
+  .option-text {
+    font-size: 13px;
+  }
+
+  .submit-answer-btn {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .results-list {
+    gap: 12px;
+  }
+
+  .result-bar-container {
+    height: 28px;
+  }
+
+  .result-percentage {
+    font-size: 13px;
+  }
+
+  .chat-bubble-btn {
+    width: 52px;
+    height: 52px;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .chat-bubble-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-container {
+    padding: 12px;
+  }
+
+  .student-card {
+    padding: 24px 20px;
+  }
+
+  .student-card h2 {
+    font-size: 18px;
+  }
+
+  .option-radio {
+    width: 20px;
+    height: 20px;
+  }
+
+  .result-radio {
+    width: 20px;
+    height: 20px;
+  }
+}
