@@ -40,6 +40,7 @@
 .results-container { padding:8px 0 0 0; }
 .results-list { display:flex; flex-direction:column; gap:14px; margin-top:6px; }
 .result-item { display:flex; gap:14px; align-items:center; }
+.result-item.correct { border-left: 4px solid #10b981; padding-left:8px; }
 .result-radio { width:20px; height:20px; border-radius:50%; background:#7765DA; position:relative; flex-shrink:0; }
 .result-content { flex:1; }
 .result-bar-wrapper { display:flex; align-items:center; gap:12px; }

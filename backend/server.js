@@ -47,15 +47,25 @@ io.on('connection', (socket) => {
 
   // Teacher creates poll
   socket.on('poll:create', (pollData) => {
+    // pollData: { question, options, timeLimit, correctFlags?: [] }
     const allAnswered = Array.from(students.values()).every(s => s.answered);
-    
-    if (!currentPoll || allAnswered) {
+
+    const zeroStudents = students.size === 0; // allow poll when no students connected
+
+    if (!currentPoll || allAnswered || zeroStudents) {
+      // Normalize correct flags: array of booleans aligned with options
+      const correctFlags = Array.isArray(pollData.correctFlags)
+        ? pollData.correctFlags.map(v => !!v)
+        : new Array(pollData.options.length).fill(false);
+
       currentPoll = {
         question: pollData.question,
         options: pollData.options,
         timeLimit: pollData.timeLimit || 60,
         startTime: Date.now(),
-        results: pollData.options.reduce((acc, opt) => ({...acc, [opt]: 0}), {})
+        // results keyed by option text
+        results: pollData.options.reduce((acc, opt) => ({...acc, [opt]: 0}), {}),
+        correctFlags // store flags on currentPoll
       };
 
       // Reset students
@@ -76,19 +86,24 @@ io.on('connection', (socket) => {
           io.emit('poll:results', {
             question: currentPoll.question,
             results: currentPoll.results,
-            totalStudents: students.size
+            totalStudents: students.size,
+            correctFlags: currentPoll.correctFlags || []
           });
-          
+
           pollHistory.push({
             ...currentPoll,
             timestamp: new Date().toISOString()
           });
+
+          // clear currentPoll so teacher can create next poll
+          currentPoll = null;
         }
       }, currentPoll.timeLimit * 1000);
     } else {
       socket.emit('poll:error', 'Cannot create poll - students still answering');
     }
   });
+
 
   // Student submits answer
   socket.on('answer:submit', (answer) => {
@@ -117,19 +132,23 @@ io.on('connection', (socket) => {
         total: students.size
       });
 
-      // If all answered, show results to everyone
       if (allAnswered) {
         io.emit('poll:results', {
           question: currentPoll.question,
           results: currentPoll.results,
-          totalStudents: students.size
+          totalStudents: students.size,
+          correctFlags: currentPoll.correctFlags || []
         });
-        
+
         pollHistory.push({
           ...currentPoll,
           timestamp: new Date().toISOString()
         });
+
+        // clear currentPoll so teacher can create next poll
+        currentPoll = null;
       }
+
     }
   });
 

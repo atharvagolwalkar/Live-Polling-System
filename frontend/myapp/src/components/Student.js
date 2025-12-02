@@ -210,30 +210,36 @@ function Student() {
           </div>
 
           <div className="results-list">
-            {Object.entries(results.results).map(([option, count]) => {
-              const total = Object.values(results.results).reduce((a, b) => a + b, 0) || 0;
-              const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+            {Object.entries(results.results).map(([option, count], optIndex) => {
+            const total = Object.values(results.results).reduce((a, b) => a + b, 0) || 0;
+            const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+            // correctFlags might be sent as results.correctFlags or results.correctFlags array
+            const correctFlags = results.correctFlags || results.correctFlags === undefined ? results.correctFlags : null;
+            // In our backend we send correctFlags at top-level of results object
+            const isCorrect = Array.isArray(results.correctFlags) ? !!results.correctFlags[optIndex] : false;
 
-              return (
-                <div key={option} className="result-item">
-                  <div className="result-radio" />
-                  <div className="result-content">
-                    <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#222' }}>
-                      {option}
+            return (
+                <div key={option} className={`result-item ${isCorrect ? 'correct' : ''}`}>
+                <div className="result-radio" />
+                <div className="result-content">
+                    <div style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#222', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                    <span>{option}</span>
+                    {isCorrect && <span style={{ background:'#10b981', color:'#fff', padding:'4px 8px', borderRadius:8, fontWeight:700 }}>Correct</span>}
                     </div>
                     <div className="result-bar-wrapper">
-                      <div className="result-bar-container">
+                    <div className="result-bar-container">
                         <div
-                          className="result-bar-fill"
-                          style={{ width: `${percentage}%` }}
+                        className="result-bar-fill"
+                        style={{ width: `${percentage}%`, background: isCorrect ? 'linear-gradient(90deg,#16a34a,#059669)' : undefined }}
                         />
-                      </div>
-                      <span className="result-percentage">{percentage}%</span>
                     </div>
-                  </div>
+                    <span className="result-percentage">{percentage}%</span>
+                    </div>
                 </div>
-              );
+                </div>
+            );
             })}
+
           </div>
 
           <p style={{

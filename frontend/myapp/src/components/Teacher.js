@@ -130,8 +130,8 @@ export default function Teacher() {
     socket.emit('student:remove', studentName);
   };
 
-  // Utility to render results
-  const renderResultBars = (resultsMap = {}, optionsList = []) => {
+  // Utility to render results for a given result map (option -> count)
+  const renderResultBars = (resultsMap = {}, optionsList = [], correctFlags = []) => {
     const counts = {};
     if (Object.keys(resultsMap).length === 0 && Array.isArray(optionsList)) {
       optionsList.forEach(opt => counts[opt] = 0);
@@ -141,20 +141,32 @@ export default function Teacher() {
 
     const total = Object.values(counts).reduce((a, b) => a + (Number(b) || 0), 0) || 0;
     const items = optionsList.length ? optionsList : Object.keys(counts);
+
     return items.map((opt, i) => {
       const cnt = Number(counts[opt] || 0);
       const pct = total ? Math.round((cnt / total) * 100) : 0;
+      const isCorrect = Array.isArray(correctFlags) && correctFlags[i];
+
       return (
-        <div key={opt + i} className="history-result-row">
-          <div className="history-label">{opt}</div>
-          <div className="history-bar-wrap">
-            <div className="history-bar" style={{ width: `${pct}%` }} />
+        <div key={opt + i} className={`history-result-row ${isCorrect ? 'correct' : ''}`}>
+          <div className="history-label">
+            {opt}
+            {isCorrect && <span className="correct-badge">✔</span>}
           </div>
+
+          <div className="history-bar-wrap">
+            <div className="history-bar" style={{
+              width: `${pct}%`,
+              background: isCorrect ? 'linear-gradient(90deg,#16a34a,#059669)' : undefined
+            }} />
+          </div>
+
           <div className="history-meta">{cnt} <span className="history-percent">({pct}%)</span></div>
         </div>
       );
     });
   };
+
 
   return (
     <div className="teacher-fullpage-combo">
@@ -290,17 +302,14 @@ export default function Teacher() {
           <div className="history-feed">
             {pollHistory.length === 0 && <div className="history-empty">No poll history yet.</div>}
             {pollHistory.map((h, idx) => (
-              <div className="history-card" key={idx}>
-                <div className="history-header">
-                  <div className="history-q">Question {pollHistory.length - idx}</div>
-                  <div className="history-time">{h.timestamp ? new Date(h.timestamp).toLocaleString() : ''}</div>
-                </div>
-                <div className="history-question">{h.question}</div>
+            <div className="history-card" key={idx}>
+                ...
                 <div className="history-results">
-                  {renderResultBars(h.results || {}, h.options || Object.keys(h.results || {}))}
+                {renderResultBars(h.results || {}, h.options || Object.keys(h.results || {}), h.correctFlags || [])}
                 </div>
-              </div>
+            </div>
             ))}
+
           </div>
         </div>
 

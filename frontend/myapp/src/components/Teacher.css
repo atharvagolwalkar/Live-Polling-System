@@ -102,6 +102,9 @@
 .history-question { background:#F8FAFB; color:var(--text); padding:10px; border-radius:8px; margin-bottom:10px; }
 .history-results { display:flex; flex-direction:column; gap:10px; }
 .history-result-row { display:flex; align-items:center; gap:12px; }
+.history-result-row.correct .history-label { font-weight:800; color:#064e3b; display:flex; align-items:center; gap:8px; }
+.correct-badge { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; background:#10b981; color:white; border-radius:6px; font-size:12px; margin-left:8px; }
+
 .history-label { width:40%; font-weight:700; color:var(--text); }
 .history-bar-wrap { flex:1; background:#F3F4F6; height:14px; border-radius:10px; overflow:hidden; margin-right:10px; }
 .history-bar { height:100%; background: linear-gradient(90deg,var(--primary-purple), var(--accent-deep)); transition: width 0.6s ease; }
