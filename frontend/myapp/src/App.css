@@ -15,28 +15,30 @@ body {
 
 /* Figma Color Palette */
 :root {
-  --primary-purple: #7765DA;
-  --secondary-purple: #5767D0;
-  --deep-purple: #4F0DCE;
+  --primary-purple: #7765DA;   /* main purple */
+  --secondary-purple: #5767D0; /* hover/gradient */
+  --deep-purple: #4F0DCE;      /* deeper accent */
   --white: #F2F2F2;
   --card-white: #FFFFFF;
-  --dark-gray: #373737;
-  --light-gray: #6E6E6E;
+  --dark-gray: #373737;        /* main dark text */
+  --light-gray: #6E6E6E;       /* subtitle / muted text */
   --border-gray: #E6E6E6;
+  --success-green: #10B981;    /* used for correct answer */
+  --danger-red: #FF4D4F;       /* timer / warning */
 }
 
 /* INTERVUE.IO Badge */
 .intervue-badge {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  background: var(--primary-purple);
+  top: 24px;
+  left: 24px;
+  background: #7765DA;
   color: white;
-  padding: 6px 16px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   z-index: 100;
 }
 
@@ -48,14 +50,15 @@ body {
   min-height: 100vh;
   padding: 40px 20px;
   position: relative;
+  background: #F2F2F2;
 }
 
 .landing-card {
-  background: var(--card-white);
+  background: #FFFFFF;
   padding: 60px 80px;
   border-radius: 16px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
-  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 650px;
   width: 100%;
   text-align: center;
 }
@@ -63,14 +66,14 @@ body {
 .landing-card h1 {
   font-size: 28px;
   font-weight: 700;
-  color: var(--dark-gray);
+  color: #111827;
   margin-bottom: 12px;
   line-height: 1.3;
 }
 
 .landing-subtitle {
   font-size: 14px;
-  color: var(--light-gray);
+  color: #6B7280;
   margin-bottom: 40px;
   line-height: 1.6;
 }
@@ -79,92 +82,87 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
 .role-card {
-  border: 2px solid var(--border-gray);
-  border-radius: 12px;
-  padding: 24px 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border: 2px solid #E5E7EB;
   background: white;
+  border-radius: 12px;
+  padding: 28px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
   text-align: left;
 }
 
 .role-card:hover {
-  border-color: var(--primary-purple);
-  background: rgba(119, 101, 218, 0.02);
+  border-color: #7765DA;
+  background: rgba(119, 101, 218, 0.03);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .role-card.selected {
-  border-color: var(--primary-purple);
+  border-color: #7765DA;
+  box-shadow: 0 4px 16px rgba(119, 101, 218, 0.12);
   background: rgba(119, 101, 218, 0.05);
-  position: relative;
-}
-
-.role-card.selected::before {
-  content: '';
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 20px;
-  height: 20px;
-  background: var(--primary-purple);
-  border-radius: 50%;
 }
 
 .role-card.selected::after {
   content: '✓';
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 20px;
-  height: 20px;
+  top: 16px;
+  right: 16px;
   color: white;
-  font-size: 12px;
-  font-weight: 700;
+  background: #7765DA;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 .role-card h3 {
   font-size: 16px;
   font-weight: 700;
-  color: var(--dark-gray);
+  color: #111827;
   margin-bottom: 8px;
 }
 
 .role-card p {
   font-size: 13px;
-  color: var(--light-gray);
-  line-height: 1.5;
+  color: #6B7280;
+  line-height: 1.6;
 }
 
 .continue-btn {
   width: 100%;
   padding: 14px;
-  background: var(--primary-purple);
+  background: linear-gradient(135deg, #5767D0 0%, #7765DA 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.continue-btn:hover {
-  background: var(--secondary-purple);
-  transform: translateY(-1px);
+  transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(119, 101, 218, 0.3);
 }
 
+.continue-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(119, 101, 218, 0.4);
+}
+
 .continue-btn:disabled {
-  background: var(--light-gray);
+  background: #D1D5DB;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 /* Teacher Dashboard */

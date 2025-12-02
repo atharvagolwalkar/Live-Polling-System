@@ -30,8 +30,9 @@ function Student() {
       setHasAnswered(false);
       setSelectedAnswer(null);
 
-      const elapsed = Math.floor((Date.now() - (pollData.startTime || Date.now())) / 1000);
-      setTimeLeft(Math.max(0, Math.floor((pollData.timeLimit || 60) - elapsed)));
+    const elapsed = Math.floor((Date.now() - (pollData.startTime || Date.now())) / 1000);
+    setTimeLeft(Math.max(0, Math.floor(pollData.timeLimit - elapsed)));
+
     });
 
     socket.on('poll:results', (resultsData) => {
@@ -148,7 +149,8 @@ function Student() {
           <div className="question-header">
             <span className="question-number">Question</span>
             <span className="question-timer">
-              ⏱ {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+          ⏱ {String(Math.floor(timeLeft / 60)).padStart(2,'0')}:{String(timeLeft % 60).padStart(2,'0')}
+  
             </span>
           </div>
 
