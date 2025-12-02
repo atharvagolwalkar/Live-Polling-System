@@ -89,16 +89,11 @@ function Student() {
     socket.emit('student:join', name.trim());
   };
 
-const handleSubmitAnswer = useCallback(() => {
-  if (selectedAnswer && !hasAnswered) {
+  const handleSubmitAnswer = () => {
+    if (!selectedAnswer || hasAnswered) return;
     socket.emit('answer:submit', selectedAnswer);
     setHasAnswered(true);
-  }
-}, [selectedAnswer, hasAnswered]); // add any other dependencies
-
-useEffect(() => {
-  // effect that needed handleSubmitAnswer
-}, [handleSubmitAnswer, /* other deps */]);
+  };
 
   if (kicked) {
     return (
