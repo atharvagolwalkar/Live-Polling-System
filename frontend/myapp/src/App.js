@@ -1,68 +1,55 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Teacher from './components/Teacher';
 import Student from './components/Student';
 import './App.css';
 
-function Home() {
+function LandingPage() {
+  const [selectedRole, setSelectedRole] = useState('');
+  const navigate = useNavigate();
+
+  const handleContinue = () => {
+    if (selectedRole === 'student') {
+      navigate('/student');
+    } else if (selectedRole === 'teacher') {
+      navigate('/teacher');
+    }
+  };
+
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      flexDirection: 'column',
-      gap: '30px'
-    }}>
-      <h1 style={{
-        color: 'white',
-        fontSize: '3rem',
-        textAlign: 'center'
-      }}>
-        Live Polling System
-      </h1>
-      <div style={{
-        display: 'flex',
-        gap: '20px'
-      }}>
-        <Link to="/teacher">
-          <button style={{
-            padding: '20px 40px',
-            fontSize: '1.3rem',
-            background: 'white',
-            color: '#667eea',
-            border: 'none',
-            borderRadius: '12px',
-            cursor: 'pointer',
-            fontWeight: '700',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s ease'
-          }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+    <div className="landing-container">
+      <div className="intervue-badge">INTERVUE.IO</div>
+      <div className="landing-card">
+        <h1>Welcome to the Live Polling System</h1>
+        <p className="landing-subtitle">
+          Please select the role that best describes you to begin using the live polling system.
+        </p>
+
+        <div className="role-selection">
+          <div
+            className={`role-card ${selectedRole === 'student' ? 'selected' : ''}`}
+            onClick={() => setSelectedRole('student')}
           >
-            Teacher Portal
-          </button>
-        </Link>
-        <Link to="/student">
-          <button style={{
-            padding: '20px 40px',
-            fontSize: '1.3rem',
-            background: 'white',
-            color: '#764ba2',
-            border: 'none',
-            borderRadius: '12px',
-            cursor: 'pointer',
-            fontWeight: '700',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s ease'
-          }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+            <h3>I'm a Student</h3>
+            <p>I can participate by answering polls of the questions asked by the teacher.</p>
+          </div>
+
+          <div
+            className={`role-card ${selectedRole === 'teacher' ? 'selected' : ''}`}
+            onClick={() => setSelectedRole('teacher')}
           >
-            Student Portal
-          </button>
-        </Link>
+            <h3>I'm a Teacher</h3>
+            <p>I want to create polls and view live poll results in real-time.</p>
+          </div>
+        </div>
+
+        <button
+          className="continue-btn"
+          onClick={handleContinue}
+          disabled={!selectedRole}
+        >
+          Continue
+        </button>
       </div>
     </div>
   );
@@ -72,7 +59,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/teacher" element={<Teacher />} />
         <Route path="/student" element={<Student />} />
       </Routes>
