@@ -1,0 +1,162 @@
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const cors = require('cors');
+
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+app.use(cors());
+app.use(express.json());
+
+// In-memory storage
+let currentPoll = null;
+let students = new Map(); // socketId -> {name, answered, answer}
+let pollHistory = [];
+
+io.on('connection', (socket) => {
+  console.log('New connection:', socket.id);
+
+  // Student joins
+  socket.on('student:join', (studentName) => {
+    students.set(socket.id, {
+      name: studentName,
+      answered: false,
+      answer: null
+    });
+    
+    // Send current poll if exists
+    if (currentPoll) {
+      socket.emit('poll:new', {
+        question: currentPoll.question,
+        options: currentPoll.options,
+        timeLimit: currentPoll.timeLimit,
+        startTime: currentPoll.startTime
+      });
+    }
+    
+    io.emit('students:update', Array.from(students.values()).map(s => s.name));
+  });
+
+  // Teacher creates poll
+  socket.on('poll:create', (pollData) => {
+    const allAnswered = Array.from(students.values()).every(s => s.answered);
+    
+    if (!currentPoll || allAnswered) {
+      currentPoll = {
+        question: pollData.question,
+        options: pollData.options,
+        timeLimit: pollData.timeLimit || 60,
+        startTime: Date.now(),
+        results: pollData.options.reduce((acc, opt) => ({...acc, [opt]: 0}), {})
+      };
+
+      // Reset students
+      students.forEach((student, id) => {
+        students.set(id, {...student, answered: false, answer: null});
+      });
+
+      io.emit('poll:new', {
+        question: currentPoll.question,
+        options: currentPoll.options,
+        timeLimit: currentPoll.timeLimit,
+        startTime: currentPoll.startTime
+      });
+
+      // Auto-show results after time limit
+      setTimeout(() => {
+        if (currentPoll) {
+          io.emit('poll:results', {
+            question: currentPoll.question,
+            results: currentPoll.results,
+            totalStudents: students.size
+          });
+          
+          pollHistory.push({
+            ...currentPoll,
+            timestamp: new Date().toISOString()
+          });
+        }
+      }, currentPoll.timeLimit * 1000);
+    } else {
+      socket.emit('poll:error', 'Cannot create poll - students still answering');
+    }
+  });
+
+  // Student submits answer
+  socket.on('answer:submit', (answer) => {
+    const student = students.get(socket.id);
+    
+    if (student && currentPoll && !student.answered) {
+      student.answered = true;
+      student.answer = answer;
+      
+      currentPoll.results[answer]++;
+      
+      // Check if all answered
+      const allAnswered = Array.from(students.values()).every(s => s.answered);
+      
+      // Send results to this student
+      socket.emit('poll:results', {
+        question: currentPoll.question,
+        results: currentPoll.results,
+        totalStudents: students.size
+      });
+
+      // Broadcast to teacher
+      io.emit('poll:update', {
+        results: currentPoll.results,
+        answered: Array.from(students.values()).filter(s => s.answered).length,
+        total: students.size
+      });
+
+      // If all answered, show results to everyone
+      if (allAnswered) {
+        io.emit('poll:results', {
+          question: currentPoll.question,
+          results: currentPoll.results,
+          totalStudents: students.size
+        });
+        
+        pollHistory.push({
+          ...currentPoll,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+  });
+
+  // Teacher requests poll history
+  socket.on('history:get', () => {
+    socket.emit('history:data', pollHistory);
+  });
+
+  // Teacher removes student
+  socket.on('student:remove', (studentName) => {
+    for (let [id, student] of students.entries()) {
+      if (student.name === studentName) {
+        students.delete(id);
+        io.to(id).emit('student:kicked');
+        io.emit('students:update', Array.from(students.values()).map(s => s.name));
+        break;
+      }
+    }
+  });
+
+  socket.on('disconnect', () => {
+    students.delete(socket.id);
+    io.emit('students:update', Array.from(students.values()).map(s => s.name));
+    console.log('Disconnected:', socket.id);
+  });
+});
+
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
